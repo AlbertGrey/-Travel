@@ -82,7 +82,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 // App code
-
                 AccessToken accessToken = loginResult.getAccessToken();
                 String user_id = accessToken.getUserId();
                 String token = accessToken.getToken();
