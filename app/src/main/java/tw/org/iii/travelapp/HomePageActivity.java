@@ -99,8 +99,8 @@ public class HomePageActivity extends AppCompatActivity {
         inittablayout();
         //更新
 //        editor.putBoolean("signin",false);
-//        editor.putString("memberid","0");
-//        editor.putString("memberemail","xxx");
+//        editor.putString("memberid","");
+//        editor.putString("memberemail","");
 //        editor.commit();
     }
 
@@ -157,11 +157,17 @@ public class HomePageActivity extends AppCompatActivity {
         fragments.add(new AttrPage());
         fragments.add(new FoodPage());
 
-        sp = getSharedPreferences("memberdata",MODE_PRIVATE);
-        editor = sp.edit();
-        issignin = sp.getBoolean("signin",false);
-        memberid = sp.getString("memberid","0");
-        memberemail = sp.getString("memberemail","xxx");
+//        sp = getSharedPreferences("memberdata",MODE_PRIVATE);
+//        editor = sp.edit();
+//        issignin = sp.getBoolean("signin",false);
+//        memberid = sp.getString("memberid","0");
+//        memberemail = sp.getString("memberemail","xxx");
+//
+//        editor.putBoolean("signin",false);
+//        editor.putString("memberid","");
+//        editor.putString("memberemail","");
+//        editor.commit();
+
     }
 
     private void inittablayout(){

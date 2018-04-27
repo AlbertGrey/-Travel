@@ -55,7 +55,7 @@ android:largeHeap="true"
         <activity
             android:name=".HomePageActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleTop">
+            >
 
         </activity>
         <activity

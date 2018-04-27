@@ -42,10 +42,9 @@ public class HotPage extends ListFragment {
     private ListView listView;
     private String jstring;
     private JSONObject jsonObject;
-    private MylistAdapter adapter;
+    private MyhotlistAdapter adapter;
     private Button mesbtn,addbtn;
     private float screenWidth,screenHeight,newHeight;
-    private boolean ismember ;
     private RequestQueue queue;
 
     private SharedPreferences sp;
@@ -69,6 +68,7 @@ public class HotPage extends ListFragment {
         issignin = sp.getBoolean("signin",true);
         memberid = sp.getString("memberid","");
         memberemail = sp.getString("memberemail","");
+        Log.v("grey","hotsign="+issignin);
 
 
         return v;
@@ -114,11 +114,11 @@ public class HotPage extends ListFragment {
         @Override
         protected void onPostExecute(LinkedList jsonresult) {
             super.onPostExecute(jsonresult);
-            adapter = new MylistAdapter(getActivity(),data);
+            adapter = new MyhotlistAdapter(getActivity(),data);
             setListAdapter(adapter);
         }
     }
-    public class MylistAdapter extends BaseAdapter {
+    public class MyhotlistAdapter extends BaseAdapter {
 
         private Context context;
         private LayoutInflater inflater;
@@ -128,7 +128,7 @@ public class HotPage extends ListFragment {
         private TextView itemaddr;
         private ImageView itemimage;
 
-        public MylistAdapter(Context context,
+        public MyhotlistAdapter(Context context,
                              LinkedList<AttrListModel> linklist) {
             this.context = context;
             this.data = linklist;
@@ -156,7 +156,7 @@ public class HotPage extends ListFragment {
             reslut = data.get(position);
             if(view==null){
                 holder = new ViewHolder();
-                view = inflater.inflate(R.layout.item_layout,viewGroup,false);
+                view = inflater.inflate(R.layout.item_layout_hot,viewGroup,false);
                 inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 holder.itemtitle = (TextView)view.findViewById(R.id.item_title);
                 holder.itemaddress = (TextView)view.findViewById(R.id.item_addr);

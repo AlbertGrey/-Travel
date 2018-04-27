@@ -2,6 +2,7 @@ package tw.org.iii.travelapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -55,12 +56,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ArrayList<DataStation> dataList, dataList2;
     private RequestQueue queue;
 
+    private SharedPreferences sp;
+    private SharedPreferences.Editor editor;
+    private boolean issignin;
+    private String memberid;
+    private String memberemail;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         //變更通知列底色
         StatusBarCompat.setStatusBarColor(this, Color.parseColor("#4f4f4f"));
+        //sp
+        sp = getSharedPreferences("memberdata",MODE_PRIVATE);
+        editor = sp.edit();
+        issignin = sp.getBoolean("signin",false);
+        memberid = sp.getString("memberid","0");
+        memberemail = sp.getString("memberemail","xxx");
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -70,11 +83,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         queue= Volley.newRequestQueue(this);
         dataList = new ArrayList<>();
         dataList2 = new ArrayList<>();
-        getFavorite(HomePageActivity.userID);
+        getFavorite(memberid);
         MyAsyncTask myAsyncTask = new MyAsyncTask();
         myAsyncTask.execute(
                 HomePageActivity.urlIP +
-                        "/fsit04/User_favorite?user_id=" +HomePageActivity.userID);
+                        "/fsit04/User_favorite?user_id=" +memberid);
 //        marker = new Marker[destinations.size()];
     }
     //找出DragView 跟他裡面的ListView
@@ -258,7 +271,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         final String p1 = user_id;
         String getFavoriteUrl =
                 HomePageActivity.urlIP +
-                        "/fsit04/User_favorite?user_id=" + HomePageActivity.userID;
+                        "/fsit04/User_favorite?user_id=" + memberid;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, getFavoriteUrl,
                 new Response.Listener<String>() {
                     @Override

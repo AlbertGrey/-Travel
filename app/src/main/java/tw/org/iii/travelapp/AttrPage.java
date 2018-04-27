@@ -45,7 +45,6 @@ public class AttrPage extends ListFragment {
     private MylistAdapter adapter;
     private Button mesbtn,addbtn;
     private float screenWidth,screenHeight,newHeight;
-    private boolean ismember ;
     private RequestQueue queue;
 
     private SharedPreferences sp;
@@ -60,17 +59,16 @@ public class AttrPage extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)    {
+        queue= Volley.newRequestQueue(getContext());
         View v = inflater.inflate(R.layout.fragment_attr_page,container,false);
+        listView=(ListView)v.findViewById(android.R.id.list);
 
         sp = getActivity().getSharedPreferences("memberdata",Context.MODE_PRIVATE);
         editor = sp.edit();
         issignin = sp.getBoolean("signin",true);
         memberid = sp.getString("memberid","");
         memberemail = sp.getString("memberemail","");
-        queue= Volley.newRequestQueue(getContext());
-
-        listView=(ListView)v.findViewById(android.R.id.list);
-
+        Log.v("grey","attsign="+issignin);
 
         new attrHttpasync().execute();
         return v;

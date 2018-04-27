@@ -44,7 +44,6 @@ public class FoodPage extends ListFragment {
     private MyfoodlistAdapter adapter;
     private Button mesbtn,addbtn;
     private float screenWidth,screenHeight,newHeight;
-    private boolean ismember = false;
     private RequestQueue queue;
 
     private SharedPreferences sp;
@@ -65,6 +64,7 @@ public class FoodPage extends ListFragment {
         issignin = sp.getBoolean("signin",true);
         memberid = sp.getString("memberid","");
         memberemail = sp.getString("memberemail","");
+        Log.v("grey","foodsign="+issignin);
 
         new attrHttpasync().execute();
         return v;
