@@ -109,7 +109,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onCancel() {
                 // App code
-                SignOut();
+//                SignOut();
             }
 
             @Override
@@ -193,23 +193,23 @@ public class LoginActivity extends AppCompatActivity {
                 }).show();
     }
 
-    private void SignOut(){
-
-        new AlertDialog.Builder(LoginActivity.this)
-                .setTitle("")
-                .setMessage("sign out")
-                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                        editor.putBoolean("signin",false);
-                        editor.putString("memberid","");
-                        editor.putString("memberemail","");
-                        editor.commit();
-                        Intent intent = new Intent(getApplicationContext(),HomePageActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                    }
-                }).show();
-    }
+//    private void SignOut(){
+//
+//        new AlertDialog.Builder(LoginActivity.this)
+//                .setTitle("")
+//                .setMessage("sign out")
+//                .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//
+//                        editor.putBoolean("signin",false);
+//                        editor.putString("memberid","");
+//                        editor.putString("memberemail","");
+//                        editor.commit();
+//                        Intent intent = new Intent(getApplicationContext(),HomePageActivity.class);
+//                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                        startActivity(intent);
+//                    }
+//                }).show();
+//    }
 }
