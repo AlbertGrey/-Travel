@@ -2,6 +2,7 @@ package tw.org.iii.travelapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -55,11 +56,17 @@ public class FavoriteActivity extends AppCompatActivity {
     private ArrayList<DataStation> dataList, dataList2, dataList3;
     private RequestQueue queue;
     private String url = "http://36.235.39.18:8080/fsit04/User_favorite";
-    private String userId = "1";
+//    private String userId = "1";
     private String restUrl = "http://36.235.39.18:8080/fsit04/restaruant";
     private LinearLayout iv_home, iv_guide, iv_camera, iv_setting;
     private File photoFile, storageDir;
     private Uri photoURI;
+
+    private SharedPreferences sp;
+    private SharedPreferences.Editor editor;
+    private boolean issignin;
+    private String memberid;
+    private String memberemail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,11 +76,17 @@ public class FavoriteActivity extends AppCompatActivity {
         StatusBarCompat.setStatusBarColor(this, Color.parseColor("#4f4f4f"));
         setTitle("我的最愛");
 
+        sp = getSharedPreferences("memberdata",MODE_PRIVATE);
+        editor = sp.edit();
+        issignin = sp.getBoolean("signin",true);
+        memberid = sp.getString("memberid","");
+        memberemail = sp.getString("memberemail","");
+
         findView();
         setIconListener();
         queue= Volley.newRequestQueue(this);
         getIntentData(); //取得Intent資料
-        getFavorite(HomePageActivity.userID); //取得我的最愛
+        getFavorite(memberid); //取得我的最愛
 
         dataList = new ArrayList<>();
         dataList2 = new ArrayList<>();
@@ -85,7 +98,7 @@ public class FavoriteActivity extends AppCompatActivity {
         MyAsyncTask myAsyncTask = new MyAsyncTask();
         myAsyncTask.execute(
                 HomePageActivity.urlIP +
-                        "/fsit04/User_favorite?user_id=" + HomePageActivity.userID);
+                        "/fsit04/User_favorite?user_id=" + memberid);
 //        init();
     }
     //取得螢幕大小
@@ -225,7 +238,7 @@ public class FavoriteActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     String total_Id = dataList.get(position).getTotal_id();
-                    deleteFavorite(userId, total_Id);
+                    deleteFavorite(memberid, total_Id);
                     dataList.remove(position);
                     myAdapter.notifyDataSetChanged();
                 }
@@ -317,7 +330,7 @@ public class FavoriteActivity extends AppCompatActivity {
         final String p2=total_id;
 
         String url =
-                HomePageActivity.urlIP + "/fsit04/User_favorite?user=" + HomePageActivity.userID;
+                HomePageActivity.urlIP + "/fsit04/User_favorite?user=" + memberid;
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -342,7 +355,7 @@ public class FavoriteActivity extends AppCompatActivity {
      */
     private void deleteFavorite(String user_id,String total_id){
         String url =
-                HomePageActivity.urlIP + "/fsit04/User_favorite?user=" + HomePageActivity.userID;
+                HomePageActivity.urlIP + "/fsit04/User_favorite?user=" + memberid;
         final String p1 = user_id;
         final String p2 = total_id;
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -371,7 +384,7 @@ public class FavoriteActivity extends AppCompatActivity {
     private void getFavorite(String user_id){
         final String p1 = user_id;
         String getFavoriteUrl =
-                HomePageActivity.urlIP + "/fsit04/User_favorite?user_id=" + HomePageActivity.userID;
+                HomePageActivity.urlIP + "/fsit04/User_favorite?user_id=" + memberid;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, getFavoriteUrl,
                 new Response.Listener<String>() {
                     @Override

@@ -3,6 +3,7 @@ package tw.org.iii.travelapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -47,14 +48,30 @@ public class AttrPage extends ListFragment {
     private boolean ismember ;
     private RequestQueue queue;
 
+    private SharedPreferences sp;
+    private SharedPreferences.Editor editor;
+    private boolean issignin;
+    private String memberid;
+    private String memberemail;
+    private ViewHolder holder;
+
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)    {
-        queue= Volley.newRequestQueue(getContext());
         View v = inflater.inflate(R.layout.fragment_attr_page,container,false);
+
+        sp = getActivity().getSharedPreferences("memberdata",Context.MODE_PRIVATE);
+        editor = sp.edit();
+        issignin = sp.getBoolean("signin",true);
+        memberid = sp.getString("memberid","");
+        memberemail = sp.getString("memberemail","");
+        queue= Volley.newRequestQueue(getContext());
+
         listView=(ListView)v.findViewById(android.R.id.list);
+
+
         new attrHttpasync().execute();
         return v;
     }
@@ -136,7 +153,7 @@ public class AttrPage extends ListFragment {
 
         @Override
         public View getView(final int position, View view, ViewGroup viewGroup) {
-            ViewHolder holder;
+
             reslut = data.get(position);
             if(view==null){
                 holder = new ViewHolder();
@@ -181,14 +198,15 @@ public class AttrPage extends ListFragment {
             holder.addbtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (ismember==true){
+                    Log.v("grey","signatt="+issignin);
+                    Log.v("grey","att_id= "+reslut.getAid());
+                    if (issignin==true){
                         reslut = data.get(position);
-                        addFavorite("1",reslut.getAid());
+                        addFavorite(memberid,reslut.getAid());
                         showAletDialog();
                     }else {
                         Intent intent = new Intent(getActivity(),LoginActivity.class);
                         startActivity(intent);
-                        ismember=true;
                     }
 
                 }
@@ -234,7 +252,7 @@ public class AttrPage extends ListFragment {
         newFragment.show(getFragmentManager(), "dialog");
     }
 
-    static class ViewHolder
+    public class ViewHolder
     {
         public ImageView itemimage;
         public TextView itemtitle;
@@ -267,7 +285,4 @@ public class AttrPage extends ListFragment {
 
     }
 
-    private boolean ismember(){
-        return false;
-    }
 }

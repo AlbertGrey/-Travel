@@ -3,6 +3,7 @@ package tw.org.iii.travelapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -47,6 +48,13 @@ public class HotPage extends ListFragment {
     private boolean ismember ;
     private RequestQueue queue;
 
+    private SharedPreferences sp;
+    private SharedPreferences.Editor editor;
+    private boolean issignin;
+    private String memberid;
+    private String memberemail;
+    private ViewHolder holder;
+
 
 
     @Override
@@ -56,6 +64,13 @@ public class HotPage extends ListFragment {
         View v = inflater.inflate(R.layout.fragment_hot_page,container,false);
         listView=(ListView)v.findViewById(android.R.id.list);
         new attrHttpasync().execute();
+        sp = getActivity().getSharedPreferences("memberdata",Context.MODE_PRIVATE);
+        editor = sp.edit();
+        issignin = sp.getBoolean("signin",true);
+        memberid = sp.getString("memberid","");
+        memberemail = sp.getString("memberemail","");
+
+
         return v;
     }
 
@@ -183,14 +198,13 @@ public class HotPage extends ListFragment {
             holder.addbtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (ismember==true){
+                    if (issignin==true){
                         reslut = data.get(position);
-                        addFavorite("1",reslut.getAid());
+                        addFavorite(memberid,reslut.getAid());
                         showAletDialog();
                     }else {
                         Intent intent = new Intent(getActivity(),LoginActivity.class);
                         startActivity(intent);
-                        ismember=true;
                     }
 
                 }
@@ -239,7 +253,7 @@ public class HotPage extends ListFragment {
         newFragment.show(getFragmentManager(), "dialog");
     }
 
-    static class ViewHolder
+    public class ViewHolder
     {
         public ImageView itemimage;
         public TextView itemtitle;
@@ -272,7 +286,4 @@ public class HotPage extends ListFragment {
 
     }
 
-    private boolean ismember(){
-        return false;
-    }
 }

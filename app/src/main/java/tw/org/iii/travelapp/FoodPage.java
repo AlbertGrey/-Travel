@@ -3,6 +3,7 @@ package tw.org.iii.travelapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -46,12 +47,25 @@ public class FoodPage extends ListFragment {
     private boolean ismember = false;
     private RequestQueue queue;
 
+    private SharedPreferences sp;
+    private SharedPreferences.Editor editor;
+    private boolean issignin;
+    private String memberid;
+    private String memberemail;
+    private ViewHolder holder;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)    {
         queue= Volley.newRequestQueue(getContext());
         View v = inflater.inflate(R.layout.fragment_food_page,container,false);
         listView=(ListView)v.findViewById(android.R.id.list);
+        sp = getActivity().getSharedPreferences("memberdata",Context.MODE_PRIVATE);
+        editor = sp.edit();
+        issignin = sp.getBoolean("signin",true);
+        memberid = sp.getString("memberid","");
+        memberemail = sp.getString("memberemail","");
+
         new attrHttpasync().execute();
         return v;
     }
@@ -137,7 +151,6 @@ public class FoodPage extends ListFragment {
         public View getView(final int position, View view, ViewGroup viewGroup) {
 
             reslut = data.get(position);
-            ViewHolder holder;
             if(view==null){
                 holder = new ViewHolder();
                 view = inflater.inflate(R.layout.item_layout,viewGroup,false);
@@ -156,14 +169,15 @@ public class FoodPage extends ListFragment {
             holder.addbtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (ismember==true){
+                    Log.v("grey","signfood="+issignin);
+                    Log.v("grey","food_id= "+reslut.getAid());
+                    if (issignin==true){
                         reslut = data.get(position);
-                        addFavorite(HomePageActivity.userID,reslut.getAid());
+                        addFavorite(memberid,reslut.getAid());
                         showAletDialog();
                     }else {
                         Intent intent = new Intent(getActivity(),LoginActivity.class);
                         startActivity(intent);
-                        ismember=true;
                     }
                 }
             });
@@ -208,7 +222,7 @@ public class FoodPage extends ListFragment {
         newFragment.show(getFragmentManager(), "dialog");
     }
 
-    static class ViewHolder{
+    public class ViewHolder{
         public ImageView itemimage;
         public TextView itemtitle;
         public TextView itemaddress;
